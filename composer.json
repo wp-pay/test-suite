@@ -1,0 +1,14 @@
+{
+    "require": {
+        "wp-cli/wp-cli": "^0.21.1",
+        "phpunit/phpunit": "^5.1",
+        "phpunit/phpunit-selenium": "^2.0"
+    },
+    "scripts": {
+        "post-install-cmd" : [
+            "",
+            "source vendor/wp-cli/wp-cli/utils/wp-completion.bash",
+            "source ~/.bash_profile"
+        ]
+    }
+}

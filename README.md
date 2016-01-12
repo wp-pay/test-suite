@@ -1,6 +1,6 @@
 # WordPress Pay - Test Suite
 
-# Test
+## Test
 
 ```bash
 POST_ID=`wp post create --post_type=pronamic_gateway --post_title='ABN AMRO - iDEAL Easy - Test' --post_status=publish --porcelain`
@@ -70,3 +70,9 @@ wp post meta update $POST_ID '_pronamic_gateway_id' 'targetpay-ideal'
 wp post meta update $POST_ID '_pronamic_gateway_mode' 'test'
 wp post meta update $POST_ID '_pronamic_gateway_targetpay_layoutcode' $TARGETPAY_LAYOUTCODE
 ```
+
+## Links
+
+*	https://xtreamwayz.com/blog/2014-11-04-phpunit-selenium-2
+*	http://codeception.com/11-12-2013/working-with-phpunit-and-selenium-webdriver.html
+*	https://gist.github.com/luxcem/8240758

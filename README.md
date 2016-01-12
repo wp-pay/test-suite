@@ -32,6 +32,11 @@ wp post meta update $POST_ID '_pronamic_gateway_id' 'ing-kassa-compleet'
 wp post meta update $POST_ID '_pronamic_gateway_mode' 'test'
 wp post meta update $POST_ID '_pronamic_gateway_ing_kassa_compleet_api_key' $ING_KASSA_COMPLEET_API_KEY
 
+POST_ID=`wp post create --post_type=pronamic_gateway --post_title='Mollie - test' --post_status=publish --porcelain`
+wp post meta update $POST_ID '_pronamic_gateway_id' 'mollie'
+wp post meta update $POST_ID '_pronamic_gateway_mode' 'test'
+wp post meta update $POST_ID '_pronamic_gateway_mollie_api_key' $MOLLIE_API_KEY
+
 POST_ID=`wp post create --post_type=pronamic_gateway --post_title='MultiSafepay - test' --post_status=publish --porcelain`
 wp post meta update $POST_ID '_pronamic_gateway_id' 'multisafepay-connect'
 wp post meta update $POST_ID '_pronamic_gateway_mode' 'test'

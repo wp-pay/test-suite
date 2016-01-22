@@ -15,8 +15,8 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase {
 
 	public function test_wc() {
 		$this->wp_login();
-		$this->new_gateway();
-		//$this->new_mollie_gateway();
+		//$this->new_gateway();
+		$this->new_mollie_gateway();
 		$this->wc_settings();
 		$this->wc_shop();
 	}
@@ -35,11 +35,37 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase {
 		$this->waitUntil( function( $testCase ) {
 			$result = $this->execute( array(
 				'script' => 'return jQuery.active == 0;',
-				'args'   => array()
+				'args'   => array(),
 			) );
 
 			return $result ? $result : null;
 		}, 2000 );
+	}
+
+	private function wait_for_jquery_animation() {
+		$this->waitUntil( function( $testCase ) {
+			$result = $this->execute( array(
+				'script' => 'return jQuery.animation.queue == 0;',
+				'args'   => array(),
+			) );
+
+			return $result ? $result : null;
+		}, 2000 );
+	}
+
+	/**
+	 * @see https://github.com/woothemes/woocommerce/blob/2.4.13/assets/js/frontend/checkout.js#L111-L131
+	 * @see http://blog.wedoqa.com/2015/10/wedbriver-wait-for-ajax-to-finish-and-jquery-animation/
+	 */
+	private function wait_for_element_animation( $selector, $timeout = 2000 ) {
+		$this->waitUntil( function( $testCase ) use ( $selector ) {
+			$result = $this->execute( array(
+				'script' => sprintf( "return jQuery( '%s' ).is( ':animated' );", $selector ),
+				'args'   => array()
+			) );
+
+			return $result ? null : true;
+		}, $timeout );
 	}
 
 	public function wp_login() {
@@ -81,6 +107,8 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase {
 		$this->screenshot( 'gateway' );
 
 		$this->byId( 'publish' )->click();
+
+		$this->screenshot( 'gateway-saved' );
 	}
 
 	public function new_mollie_gateway() {
@@ -103,6 +131,8 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase {
 		$this->screenshot( 'gateway' );
 
 		$this->byId( 'publish' )->click();
+
+		$this->screenshot( 'gateway-saved' );
 	}
 
 	public function wc_settings() {
@@ -110,8 +140,6 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase {
 //		$message = $this->byCssSelector( '.updated.notice-success' );
 
 //		$this->assertContains( 'updated notice notice-success is-dismissible', $message->attribute( 'class' ) );
-
-		$this->screenshot( 'gateway-updated' );
 
 		// WooCommerce Settings
 		$this->url( 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=pronamic_wp_pay_extensions_woocommerce_idealgateway' );
@@ -128,6 +156,8 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase {
 		$this->screenshot( 'settings' );
 
 		$this->byName( 'save' )->click();
+
+		$this->screenshot( 'settings-saved' );
 	}
 
 	public function wc_shop() {
@@ -155,9 +185,47 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase {
 
 		$this->screenshot( 'checkout' );
 
+		$billing_first_name = $this->byId( 'billing_first_name' );
+		$billing_first_name->clear();
+		$billing_first_name->value( 'Test' );
+
+		$billing_last_name = $this->byId( 'billing_last_name' );
+		$billing_last_name->clear();
+		$billing_last_name->value( 'Test' );
+
+		$billing_phone = $this->byId( 'billing_phone' );
+		$billing_phone->clear();
+		$billing_phone->value( '1234567890' );
+
+		$billing_address_1 = $this->byId( 'billing_address_1' );
+		$billing_address_1->clear();
+		$billing_address_1->value( 'Test 1' );
+		
+		$billing_postcode = $this->byId( 'billing_postcode' );
+		$billing_postcode->clear();
+		$billing_postcode->value( '1234 TE' );
+
+		$billing_city = $this->byId( 'billing_city' );
+		$billing_city->clear();
+		$billing_city->value( 'Test' );
+
+		$this->wait_for_ajax();
+
 		$this->byId( 'payment_method_pronamic_pay_ideal' )->click();
 
+		$this->wait_for_element_animation( '.payment_method_pronamic_pay_ideal', 5000 );
+
 		$this->screenshot( 'checkout-ideal' );
+
+		$this->byId( 'place_order' )->click();
+
+		$this->wait_for_ajax();
+
+		$this->screenshot( 'mollie-test' );
+
+		$this->byCssSelector( 'form button' )->click();
+
+		$this->screenshot( 'order-received' );
 	}
 
     public function screenshot($name) 

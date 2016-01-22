@@ -61,6 +61,8 @@ wp option update pronamic_pay_license_status valid
 # https://github.com/pronamic/wp-pronamic-ideal/blob/3.7.3/classes/Pronamic/WP/Pay/Admin/Tour.php#L34
 wp user meta update $WP_PAY_TEST_ADMIN_USER pronamic_pay_ignore_tour 1
 
+wp user meta update $WP_PAY_TEST_ADMIN_USER show_admin_bar_front 0
+
 # WooCommerce
 wp plugin install woocommerce --activate
 

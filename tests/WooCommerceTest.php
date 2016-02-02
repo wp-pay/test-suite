@@ -7,18 +7,175 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase {
 	 * @see https://github.com/giorgiosironi/phpunit-selenium/blob/master/Tests/Selenium2TestCaseTest.php
 	 */
 	protected function setUp() {
+		$test_dir            = '/Users/remco/Websites/wp-pay-test.dev';
+		$test_locale         = 'nl_NL';
+		$test_db_name        = 'wp-pay-test';
+		$test_db_user        = 'root';
+		$test_db_pass        = 'root';
+		$test_url            = 'http://wp-pay-test.dev/';
+		$test_title          = 'WordPress Pay Test';
+		$test_admin_user     = 'remcotolsma';
+		$test_admin_password = 'remcotolsma';
+		$test_admin_email    = 'info@remcotolsma.nl';
+		$pronamic_ideal_develop_dir  = '/Users/remco/Workspace/wp-pronamic-ideal';
+
+		if ( is_dir( $test_dir ) ) {
+			printf( 'WordPress pay test dir exists: %s', $test_dir );
+			echo PHP_EOL;
+
+			chdir( $test_dir );
+
+			echo `wp db drop --yes`;
+			echo `rm -r $test_dir`;
+		}
+
+		printf( 'WordPress pay test dir does not exists: %s', $test_dir );
+		echo PHP_EOL;
+
+		echo `mkdir $test_dir`;
+
+		if ( is_file( $test_dir . '/wp-load.php' ) ) {
+			printf( 'WordPress files seem to already be present here.' );
+			echo PHP_EOL;
+		}
+
+		chdir( $test_dir );
+
+		echo `wp core download --path=$test_dir --locale=$test_locale --debug`;
+
+		echo `wp core config --dbname=$test_db_name --dbuser=$test_db_user --dbpass=$test_db_pass --locale=$test_locale --extra-php <<PHP
+define( 'AUTOSAVE_INTERVAL', 60*60*60*24*365 );
+define( 'EMPTY_TRASH_DAYS',  0 );
+define( 'WP_POST_REVISIONS', false );
+PHP`;
+
+		echo `wp db create`;
+
+		echo `wp core install --url=$test_url --title="$test_title" --admin_user=$test_admin_user --admin_password=$test_admin_password --admin_email=$test_admin_email`;
+
+		// Pronamic iDEAL
+		$pronamic_ideal_plugin_dir = $test_dir . '/wp-content/plugins/pronamic-ideal';
+
+		if ( isset( $pronamic_ideal_develop_dir ) ) {
+			echo `ln -s $pronamic_ideal_develop_dir $pronamic_ideal_plugin_dir`;
+		} else {
+			echo exec( 'git clone --depth=50 --branch="develop" https://github.com/pronamic/wp-pronamic-ideal.git ' . $pronamic_ideal_dir );
+
+			chdir( $pronamic_ideal_dir );
+
+			echo `composer install --no-dev`;
+
+			chdir( $test_dir );
+		}
+
+		echo `wp plugin activate pronamic-ideal`;
+
+		// https://github.com/pronamic/wp-pronamic-ideal/blob/3.7.3/classes/Pronamic/WP/Pay/Admin.php#L291
+		echo `wp option update pronamic_pay_license_status valid`;
+
+		// https://github.com/pronamic/wp-pronamic-ideal/blob/3.7.3/classes/Pronamic/WP/Pay/Admin/Tour.php#L34
+		echo `wp user meta update $test_admin_user pronamic_pay_ignore_tour 1`;
+
+		echo `wp user meta update $test_admin_user show_admin_bar_front 0`;
+
+		// WooCommerce 
+		echo `wp plugin install woocommerce --activate`;
+
+		// https://github.com/woothemes/woocommerce/blob/2.4.12/includes/admin/class-wc-admin.php#L96-L106
+		//echo `wp transient delete _wc_activation_redirect`;
+
+		//echo `wp option delete woocommerce_admin_notices`;
+
+		$product_count = `wp post list --post_type=product --format=count`;
+
+		if ( 0 == $product_count ) {
+			echo `wp plugin install wordpress-importer --activate`;
+			
+			echo `wp import wp-content/plugins/woocommerce/dummy-data/dummy-data.xml --authors=create --skip=image_resize`;				
+		}
+
+		// Selenium
+		$this->selenium_resource = proc_open(
+			'selenium-server -p 4444',
+			array(),
+			$pipes
+		);
+
+		# Waiting for Selenium
+		echo `wget --retry-connrefused --tries=60 --waitretry=1 http://127.0.0.1:4444/wd/hub/status -O /dev/null`;
+
 		$this->setBrowser( 'firefox' );
 		$this->setBrowserUrl( 'http://wp-pay-test.dev/' );
 
 		$this->step = 1;
 	}
 
+	protected function tearDown() {
+		$test_dir            = '/Users/remco/Websites/wp-pay-test.dev';
+
+		// Terminate Selenium
+		proc_terminate( $this->selenium_resource );
+
+		// Drop database
+		//echo `wp db drop --yes`;
+
+		// Remove installation
+		//echo `rm -r $test_dir`;
+	}
+
 	public function test_wc() {
 		$this->wp_login();
+		$this->wc_setup();
 		//$this->new_gateway();
 		$this->new_mollie_gateway();
 		$this->wc_settings();
 		$this->wc_shop();
+	}
+
+	public function wc_setup() {
+		$this->url( 'wp-admin/admin.php?page=wc-setup' );
+
+		// Welcome
+		$this->screenshot( 'wc-setup-welcome' );
+
+		$this->byCssSelector( '.wc-setup-actions .button-primary' )->click();
+
+		$this->wait_for_ajax();
+
+		// Pages
+		$this->screenshot( 'wc-setup-pages' );
+
+		$this->byCssSelector( '.wc-setup-actions .button-primary' )->click();
+
+		$this->wait_for_ajax();
+
+		// Locale
+		$this->screenshot( 'wc-setup-locale' );
+
+		$this->byCssSelector( '.wc-setup-actions .button-primary' )->click();
+
+		$this->wait_for_ajax();
+
+		// Shipping and Taxes
+		$this->screenshot( 'wc-setup-shipping-taxes' );
+
+		$this->byCssSelector( '.wc-setup-actions .button-primary' )->click();
+
+		$this->wait_for_ajax();
+
+		// Payments
+		$this->byId( 'woocommerce_enable_cheque' )->click();
+		$this->byId( 'woocommerce_enable_cod' )->click();
+		$this->byId( 'woocommerce_enable_bacs' )->click();
+
+		$this->screenshot( 'wc-setup-shipping-payments' );
+
+		$this->byCssSelector( '.wc-setup-actions .button-primary' )->click();
+
+		$this->wait_for_ajax();
+
+		// Return 
+		$this->byCssSelector( '.wc-return-to-dashboard' )->click();	
 	}
 
 	private function wait_for_autosave() {

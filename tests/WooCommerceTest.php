@@ -17,15 +17,26 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase {
 		$test_admin_user     = 'remcotolsma';
 		$test_admin_password = 'remcotolsma';
 		$test_admin_email    = 'info@remcotolsma.nl';
-		$pronamic_ideal_develop_dir  = '/Users/remco/Workspace/wp-pronamic-ideal';
+		$pronamic_ideal_develop_dir  = '/Users/remco/Workspace/wp-pronamic-ideal/deploy/latest';
 
 		if ( is_dir( $test_dir ) ) {
 			printf( 'WordPress pay test dir exists: %s', $test_dir );
 			echo PHP_EOL;
 
+			fwrite( STDOUT, sprintf( 'Are you sure you want to delete %s', $test_dir ) . " [y/n] " );
+			$answer = strtolower( trim( fgets( STDIN ) ) );
+			if ( 'y' !== $answer ) {
+				exit;
+			}
+
+			$current_dir = getcwd();
+
 			chdir( $test_dir );
 
 			echo `wp db drop --yes`;
+
+			chdir( $current_dir );
+
 			echo `rm -r $test_dir`;
 		}
 
@@ -52,6 +63,9 @@ PHP`;
 		echo `wp db create`;
 
 		echo `wp core install --url=$test_url --title="$test_title" --admin_user=$test_admin_user --admin_password=$test_admin_password --admin_email=$test_admin_email`;
+
+		// Storefront
+		echo `wp theme install storefront --activate`;
 
 		// Pronamic iDEAL
 		$pronamic_ideal_plugin_dir = $test_dir . '/wp-content/plugins/pronamic-ideal';

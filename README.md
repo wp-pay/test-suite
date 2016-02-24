@@ -44,6 +44,14 @@ wp post meta update $POST_ID '_pronamic_gateway_multisafepay_account_id' $MULTIS
 wp post meta update $POST_ID '_pronamic_gateway_multisafepay_site_id' $MULTISAFEPAY_SITE_ID
 wp post meta update $POST_ID '_pronamic_gateway_multisafepay_site_code' $MULTISAFEPAY_SITE_CODE
 
+POST_ID=`wp post create --post_type=pronamic_gateway --post_title='Ingenico/Ogone - Test' --post_status=publish --porcelain`
+wp post meta update $POST_ID '_pronamic_gateway_id' 'ogone-orderstandard'
+wp post meta update $POST_ID '_pronamic_gateway_mode' 'test'
+wp post meta update $POST_ID '_pronamic_gateway_ogone_psp_id' $OGONE_PSP_ID
+wp post meta update $POST_ID '_pronamic_gateway_ogone_hash_algorithm' $OGONE_HASH_ALGORITHM
+wp post meta update $POST_ID '_pronamic_gateway_ogone_sha_in_pass_phrase' $OGONE_SHA_IN_PASS_PHRASE
+wp post meta update $POST_ID '_pronamic_gateway_ogone_sha_out_pass_phrase' $OGONE_SHA_OUT_PASS_PHRASE
+
 POST_ID=`wp post create --post_type=pronamic_gateway --post_title='OmniKassa - Test' --post_status=publish --porcelain`
 wp post meta update $POST_ID '_pronamic_gateway_id' 'rabobank-omnikassa'
 wp post meta update $POST_ID '_pronamic_gateway_mode' 'test'

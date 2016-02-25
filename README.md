@@ -84,3 +84,5 @@ wp post meta update $POST_ID '_pronamic_gateway_targetpay_layoutcode' $TARGETPAY
 *	https://xtreamwayz.com/blog/2014-11-04-phpunit-selenium-2
 *	http://codeception.com/11-12-2013/working-with-phpunit-and-selenium-webdriver.html
 *	https://gist.github.com/luxcem/8240758
+
+*	http://pietervogelaar.nl/ubuntu-14-04-install-selenium-as-service-headless

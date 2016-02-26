@@ -70,7 +70,7 @@ class Test {
 	}
 }
 
-$test = new Test();
+$test = new Test( false );
 
 // Run
 if ( false ) {
@@ -149,3 +149,5 @@ $test->kill( 'pids/%s-xvfb.pid' );
 
 // Terminate WordPress server
 $test->kill( 'pids/%s-wp-server.pid' );
+
+$test->passthru( 'killall -r php' );

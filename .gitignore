@@ -24,7 +24,10 @@
 /wordpress/
 
 # Logs
-/logs/
+/logs/*.log
 
 # PIDs
-/pids/
+/pids/*.pid
+
+# Screenshots
+/screenshots/*.png

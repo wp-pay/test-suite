@@ -3,6 +3,10 @@
 # https://github.com/wp-pay/travis-ci-test
 echo 'Hello World!'
 
+apt-get -y install language-pack-nl
+
+add-apt-repository -y ppa:ondrej/php
+
 apt-get update
 
 # apt-cache search 
@@ -22,19 +26,30 @@ apt-get -y install firefox
 
 apt-get -y install unzip
 
-apt-get -y install node
+# apt-get -y install node
 
 # https://www.dev-metal.com/install-setup-php-5-6-ubuntu-14-04-lts/
-apt-get -y install php5-fpm
-apt-get -y install php5-cli
+#apt-get -y install php5-fpm
+#apt-get -y install php5-cli
 
-apt-get -y install php5-common
-apt-get -y install php5-dev
+#apt-get -y install php5-common
+#apt-get -y install php5-dev
 
-apt-get -y install php5-mysql
-apt-get -y install php5-curl
+#apt-get -y install php5-mysql
+#apt-get -y install php5-curl
 
-apt-get -y install mysql-server
+apt-get -y install php7.0-common
+apt-get -y install php7.0-cli
+apt-get -y install php7.0-dev
+apt-get -y install php7.0-curl
+apt-get -y install php7.0-mysql
+# https://gistpages.com/posts/php_fatal_error_class_domdocument_not_found
+# http://stackoverflow.com/questions/14395239/magento-class-domdocument-not-found
+apt-get -y install php7.0-xml
+
+# apt-get -y install mysql-server
+# https://www.vultr.com/docs/install-mariadb-on-ubuntu-14-04
+apt-get -y install mariadb-server
 
 apt-get -y install xvfb
 

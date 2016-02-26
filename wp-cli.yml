@@ -7,7 +7,9 @@ core config:
   dbpass: root
   dbname: wordpress
   extra-php: |
-    define( 'WP_DEBUG', true );
+    define( 'AUTOSAVE_INTERVAL', 60*60*60*24*365 );
+    define( 'EMPTY_TRASH_DAYS',  0 );
+    define( 'WP_POST_REVISIONS', false );
 
 core install:
   title: Test

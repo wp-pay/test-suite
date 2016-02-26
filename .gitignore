@@ -22,3 +22,9 @@
 
 # WordPress
 /wordpress/
+
+# Logs
+/logs/
+
+# PIDs
+/pids/

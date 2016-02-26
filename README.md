@@ -1,5 +1,9 @@
 # WordPress Pay - Test Suite
 
+## CLI
+
+`./vendor/bin/phpunit ./tests/WPTest.php --verbose`
+
 ## Test
 
 ```bash

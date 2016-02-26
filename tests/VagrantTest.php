@@ -7,6 +7,7 @@ class VagrantTest extends PHPUnit_Extensions_Selenium2TestCase {
 	 * @see https://github.com/giorgiosironi/phpunit-selenium/blob/master/Tests/Selenium2TestCaseTest.php
 	 */
 	protected function setUp() {
+		// $this->setBrowser( 'chrome' );
 		$this->setBrowser( 'firefox' );
 		$this->setBrowserUrl( 'http://pronamic.nl/' );
 	}

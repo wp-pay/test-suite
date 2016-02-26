@@ -18,11 +18,13 @@ apt-get -y install default-jre
 # http://askubuntu.com/questions/79280/how-to-install-chrome-browser-properly-via-command-line
 # apt-get -y install google-chrome-stable
 apt-get -y install chromium-browser
+apt-get -y install firefox
 
 apt-get -y install unzip
 
 apt-get -y install node
 
+# https://www.dev-metal.com/install-setup-php-5-6-ubuntu-14-04-lts/
 apt-get -y install php5-fpm
 apt-get -y install php5-cli
 
@@ -38,6 +40,10 @@ apt-get -y install xvfb
 
 apt-get -y install phpunit
 apt-get -y install phpunit-selenium
+
+# http://www.penguinproducer.com/Blog/2012/06/command-for-recording-desktop/
+# https://libav.org/
+apt-get -y install libav-tools
 
 ## FFPMG
 # http://www.faqforge.com/linux/how-to-install-ffmpeg-on-ubuntu-14-04/

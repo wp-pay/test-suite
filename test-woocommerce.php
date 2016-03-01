@@ -1,83 +1,15 @@
 <?php
 
-// Functions
-class Test {
-	public function __construct( $dry_run = false ) {
-		$this->dry_run = $dry_run;
-	}
-
-	public function shell_exec( $command ) {
-		echo $command, PHP_EOL;
-
-		$result = null;
-
-		if ( ! $this->dry_run ) {
-			$result = shell_exec( $command );
-
-			echo $result;
-		}
-
-		echo PHP_EOL;
-
-		return $result;
-	}
-
-	public function passthru( $command ) {
-		echo $command, PHP_EOL;
-
-		if ( ! $this->dry_run ) {
-			passthru( $command );
-		}
-
-		echo PHP_EOL;
-	}
-
-	/**
-	 * Process
-	 *
-	 * @see http://unix.stackexchange.com/questions/30370/how-to-get-the-pid-of-the-last-executed-command-in-shell-script
-	 * @see http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-3.html
-	 * @see https://trac.ffmpeg.org/wiki/PHP
-	 * @see http://tldp.org/LDP/abs/html/io-redirection.html
-	 */
-	public function process( $command, $stdout_file, $pid_file ) {
-		$this->kill( $pid_file );
-
-		$pid_file = sprintf( $pid_file, getenv( 'USER' ) );
-
-		$command = sprintf(
-			'%s > %s & echo $! > %s',
-			$command,
-			escapeshellarg( $stdout_file ),
-			escapeshellarg( $pid_file )
-		);
-
-		$this->passthru( $command );
-	}
-
-	public function kill( $pid_file ) {
-		$pid_file = sprintf( $pid_file, getenv( 'USER' ) );
-
-		if ( is_readable( $pid_file ) ) {
-			$pid = file_get_contents( $pid_file );
-
-			$this->passthru( 'kill ' . $pid );
-
-			if ( ! $this->dry_run ) {
-				unlink( $pid_file );
-			}
-		}
-	}
-}
+require_once 'load.php';
 
 $test = new Test( false );
 
 // Run
-if ( false ) {
+if ( true ) {
 	$test->passthru( 'rm -r ./wordpress' );
 	$test->passthru( 'mkdir ./wordpress' );
 	$test->passthru( 'wp core download' );
-	$test->passthru( 'wp core config' );
+	$test->passthru( sprintf( 'wp core config --dbpass=%s', 'root' ) );
 
 	$test->passthru( 'wp core language install nl_NL' );
 	$test->passthru( 'wp theme install storefront' );
@@ -120,12 +52,26 @@ if ( 0 == $product_count ) {
 
 $display = null;
 
-if ( 'vagrant' === getenv( 'USER' ) ) {
+if ( $test->is_executable( 'Xvfb' ) ) {
 	$display = ':90.0';
 
 	$test->process( sprintf( 'Xvfb %s -ac -screen 0 1920x1080x24', $display ), 'logs/xvfb.log', 'pids/%s-xvfb.pid' );
 
-	$test->process( sprintf( 'avconv -an -f x11grab -y -r 5 -s 1920x1080 -i %s -vcodec libtheora -qmin 31 -b 1024k test.ogg', $display ), '/dev/null', 'pids/%s-avconv.pid' );
+	if ( $test->is_executable( 'avconv' ) ) {
+		$test->process( sprintf( 'avconv -an -f x11grab -y -r 5 -s 1920x1080 -i %s -vcodec libtheora -qmin 31 -b 1024k test.ogg', $display ), '/dev/null', 'pids/%s-avconv.pid' );
+
+		// @see http://unix.stackexchange.com/a/117623
+		// $test->process( sprintf( 'avconv -f x11grab -s 1920x1080 -r 30 -i %s -vcodec h264 test.mkv', $display ), '/dev/null', 'pids/%s-avconv.pid' );
+
+		// @see http://stackoverflow.com/questions/10166204/ffmpeg-screencast-recording-which-codecs-to-use
+		// @see http://unix.stackexchange.com/a/117623
+		// $test->process( sprintf( 'avconv -f x11grab -s 1920x1080 -r 30 -i %s -qscale 0 -vcodec h264 test.mkv', $display ), '/dev/null', 'pids/%s-avconv.pid' );
+
+		// @see https://trac.ffmpeg.org/wiki/Encode/MPEG-4
+		// @see http://www.andrewhazelden.com/blog/2014/08/screen-video-recording-on-linux/
+	} elseif ( $test->is_executable( 'ffmpeg' ) ) {
+		$test->process( sprintf( 'ffmpeg -an -f x11grab -y -r 5 -s 1920x1080 -i %s -vcodec ffvhuff -qmin 31 -b 1024k test.mkv', $display ), '/dev/null', 'pids/%s-ffmpeg.pid' );
+	}
 }
 
 $prefix = $display ? 'export DISPLAY=localhost:90.0' . ' && ' : '';
@@ -134,12 +80,15 @@ $test->process( $prefix . 'java -jar selenium-server-standalone.jar', 'logs/sele
 
 $test->passthru( 'wget --retry-connrefused --tries=10 --waitretry=1 http://127.0.0.1:4444/wd/hub/status -O /dev/null' );
 
-$test->process( 'wp server', 'logs/wp-server.log', 'pids/%s-wp-server.pid' );
+// $test->process( 'wp server', 'logs/wp-server.log', 'pids/%s-wp-server.pid' );
+// http://php.net/manual/en/features.commandline.webserver.php
+$test->process( 'php -S localhost:8080 -c php.ini -t wordpress vendor/wp-cli/wp-cli/php/router.php', 'logs/php-server.log', 'pids/%s-php-server.pid' );
 
 $test->passthru( './vendor/bin/phpunit ./tests/WPTest.php --verbose --debug' );
 
 // Terminate avconv
 $test->kill( 'pids/%s-avconv.pid' );
+$test->kill( 'pids/%s-ffmpeg.pid' );
 
 // Terminate Selenium
 $test->kill( 'pids/%s-selenium.pid' );

@@ -31,3 +31,6 @@
 
 # Screenshots
 /screenshots/*.png
+
+# WP-CLI
+/wp-cli.local.yml

@@ -49,6 +49,7 @@ apt-get -y install php7.0-xml
 
 # apt-get -y install mysql-server
 # https://www.vultr.com/docs/install-mariadb-on-ubuntu-14-04
+apt-get -y install mariadb-server-5.5
 apt-get -y install mariadb-server
 
 apt-get -y install xvfb

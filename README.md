@@ -4,6 +4,8 @@
 
 https://joshtronic.com/2014/08/31/upgrade-to-php-56-on-ubuntu-1404-lts/
 https://www.digitalocean.com/community/tutorials/how-to-upgrade-to-php-7-on-ubuntu-14-04
+http://stackoverflow.com/questions/3945420/how-can-i-make-phpunit-selenium-run-faster
+https://github.com/giorgiosironi/phpunit-selenium
 
 which Xvfb
 which avconv

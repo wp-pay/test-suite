@@ -4,18 +4,14 @@
 # Composer
 /vendor/
 
-# ChromeDriver
-/chromedriver_linux64.zip
-/chromedriver
+# Apps
+/apps
 
 # Node.js
 /node_modules/
 
 # Screenshots
 /screenshots/
-
-# Selenium
-/selenium-server-standalone.jar
 
 # Vagrant
 .vagrant

@@ -1,22 +1,28 @@
 <?php
 
-class WPTest extends Pronamic_WP_Pay_TestSuite_Selenium2TestCase {
+use Facebook\WebDriver\WebDriverBy;
+
+class WPTest extends Pronamic_WP_Pay_TestSuite_TestCase {
 	public function test_wp() {
 		$this->wp_login();
 	}
 
 	public function wp_login() {
-		$this->url( 'wp-admin' );
+		$this->webDriver->get( 'http://localhost:8080/wp-admin/' );
 
-		// Login
-		$login_form = $this->byId( 'loginform' );
+		$user_login = $this->webDriver->findElement( WebDriverBy::id( 'user_login' ) );
+		$user_login->click();
+		
+		$this->webDriver->getKeyboard()->sendKeys( 'test' );
 
-		$this->byId( 'user_pass' )->value( 'test' );
+		$user_pass = $this->webDriver->findElement( WebDriverBy::id( 'user_pass' ) );
+		$user_pass->click();
+		
+		$this->webDriver->getKeyboard()->sendKeys( 'test' );
 
-		$this->byId( 'user_login' )->value( 'test' );
+		$this->webDriver->takeScreenshot( __DIR__ . '/../screenshots/screenshot2.png' );
 
-		$this->screenshot( 'login' );
-
- 		$login_form->submit();
+		$submit = $this->webDriver->findElement( WebDriverBy::id( 'wp-submit' ) );
+		$submit->click();
 	}
 }

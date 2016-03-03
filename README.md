@@ -6,13 +6,20 @@ https://joshtronic.com/2014/08/31/upgrade-to-php-56-on-ubuntu-1404-lts/
 https://www.digitalocean.com/community/tutorials/how-to-upgrade-to-php-7-on-ubuntu-14-04
 http://stackoverflow.com/questions/3945420/how-can-i-make-phpunit-selenium-run-faster
 https://github.com/giorgiosironi/phpunit-selenium
+http://codeception.com/11-12-2013/working-with-phpunit-and-selenium-webdriver.html#.VtgZZJPhDAw
+http://www.sitepoint.com/using-the-selenium-web-driver-api-with-phpunit/
 
 which Xvfb
 which avconv
 
+## Structure
+
+/tests/woocommerce/2.5.3/mollie/
+/tests/wp-e-commerce/3.11.2/mollie/
+
 ## CLI
 
-`./vendor/bin/phpunit ./tests/WPTest.php --verbose`
+`vendor/bin/phpunit tests/WordPressTest.php --verbose --debug`
 
 ## Test
 

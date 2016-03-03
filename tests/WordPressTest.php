@@ -2,7 +2,7 @@
 
 use Facebook\WebDriver\WebDriverBy;
 
-class WPTest extends Pronamic_WP_Pay_TestSuite_TestCase {
+class Pronamic_WP_Pay_TestSuite_WordPressTest extends Pronamic_WP_Pay_TestSuite_TestCase {
 	public function test_wp() {
 		$this->wp_login();
 	}

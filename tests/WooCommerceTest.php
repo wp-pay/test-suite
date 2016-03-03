@@ -1,6 +1,6 @@
 <?php
 
-class WPTest extends Pronamic_WP_Pay_TestSuite_Selenium2TestCase {
+class Pronamic_WP_Pay_TestSuite_WooCommerceTest extends Pronamic_WP_Pay_TestSuite_TestCase {
 	public function setUp() {
 		parent::setUp();
 

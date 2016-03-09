@@ -1,6 +1,9 @@
 # Build
 /build/
 
+# Config
+/config.php
+
 # Composer
 /vendor/
 

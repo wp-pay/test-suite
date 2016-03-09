@@ -1,10 +1,13 @@
 <?php
 
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverSelect;
 
 class Pronamic_WP_Pay_TestSuite_GravityFormsTest extends Pronamic_WP_Pay_TestSuite_TestCase {
 	public function setUp() {
+		/*
 		parent::setUp();
 
 		global $helper;
@@ -24,6 +27,13 @@ class Pronamic_WP_Pay_TestSuite_GravityFormsTest extends Pronamic_WP_Pay_TestSui
 
 		// User
 		$cli->passthru( 'wp user meta update test show_admin_bar_front 0' );
+		*/
+
+		// WebDriver
+		$this->webDriver = RemoteWebDriver::create( 'http://localhost:4444/wd/hub', DesiredCapabilities::firefox() );
+
+		// @see https://github.com/facebook/php-webdriver/wiki/Example-command-reference
+		// $this->webDriver->manage()->window()->maximize();
 	}
 
 	public function test_gravityforms() {
@@ -38,14 +48,10 @@ class Pronamic_WP_Pay_TestSuite_GravityFormsTest extends Pronamic_WP_Pay_TestSui
 		$this->webDriver->get( 'http://localhost:8080/wp-admin/' );
 
 		$user_login = $this->webDriver->findElement( WebDriverBy::id( 'user_login' ) );
-		$user_login->click();
-		
-		$this->webDriver->getKeyboard()->sendKeys( 'test' );
+		$user_login->sendKeys( 'test' );
 
 		$user_pass = $this->webDriver->findElement( WebDriverBy::id( 'user_pass' ) );
-		$user_pass->click();
-		
-		$this->webDriver->getKeyboard()->sendKeys( 'test' );
+		$user_pass->sendKeys( 'test' );
 
 		$this->webDriver->takeScreenshot( __DIR__ . '/../screenshots/screenshot2.png' );
 
@@ -74,9 +80,7 @@ class Pronamic_WP_Pay_TestSuite_GravityFormsTest extends Pronamic_WP_Pay_TestSui
 
 		// Title
 		$title_field = $this->webDriver->findElement( WebDriverBy::id( 'title' ) );
-		$title_field->click();
-
-		$this->webDriver->getKeyboard()->sendKeys( 'Buckaroo' );
+		$title_field->sendKeys( 'Buckaroo' );
 
 		// Gateway
 		$gateway_field = $this->webDriver->findElement( WebDriverBy::id( 'pronamic_gateway_id' ) );
@@ -86,14 +90,10 @@ class Pronamic_WP_Pay_TestSuite_GravityFormsTest extends Pronamic_WP_Pay_TestSui
 
 		// Buckaroo
 		$key_field = $this->webDriver->findElement( WebDriverBy::id( '_pronamic_gateway_buckaroo_website_key' ) );
-		$key_field->click();
-
-		$this->webDriver->getKeyboard()->sendKeys( getenv( 'BUCKAROO_WEBSITE_KEY' ) );
+		$key_field->sendKeys( getenv( 'BUCKAROO_WEBSITE_KEY' ) );
 
 		$key_field = $this->webDriver->findElement( WebDriverBy::id( '_pronamic_gateway_buckaroo_secret_key' ) );
-		$key_field->click();
-
-		$this->webDriver->getKeyboard()->sendKeys( getenv( 'BUCKAROO_SECRET_KEY' ) );
+		$key_field->sendKeys( getenv( 'BUCKAROO_SECRET_KEY' ) );
 
 		// Wait for autosave
 		$this->waitForAjax();

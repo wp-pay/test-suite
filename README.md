@@ -19,6 +19,7 @@ which avconv
 
 ## CLI
 
+`vendor/bin/phpunit tests/GravityFormsTest.php --verbose --debug`
 `vendor/bin/phpunit tests/WordPressTest.php --verbose --debug`
 `vendor/bin/phpunit tests/WooCommerceTest.php --verbose --debug`
 

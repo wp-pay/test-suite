@@ -23,6 +23,9 @@ class Pronamic_WP_Pay_TestSuite_TestCase extends PHPUnit_Framework_TestCase {
 		// WebDriver
 		$this->webDriver = RemoteWebDriver::create( 'http://localhost:4444/wd/hub', DesiredCapabilities::firefox() );
 
+		// @see https://github.com/facebook/php-webdriver/wiki/Example-command-reference
+		// $this->webDriver->manage()->window()->maximize();
+
 		// Steps
 		$this->step = 1;
 	}

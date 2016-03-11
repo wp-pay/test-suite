@@ -11,6 +11,10 @@ class Pronamic_WP_Pay_TestSuite_Config {
 		return realpath( __DIR__ . '/../' . $this->path );
 	}
 
+	public function get_screenshots_dir() {
+		return realpath( __DIR__ . '/../screenshots/' );
+	}
+
 	public function get_db_pass() {
 		return $this->db_pass;		
 	}

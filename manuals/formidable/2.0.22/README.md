@@ -5,12 +5,12 @@
 3. [Inloggen in WordPress admin omgeving](#inloggen-in-wordpress-admin-omgeving)
 4. [Nieuwe betalingsgateway gateway toevoegen](#nieuwe-betalingsgateway-gateway-toevoegen)
 5. [Nieuw Formidable Forms formulier toevoegen](#nieuw-formidable-forms-formulier-toevoegen)
-6. [New Form Action](#new-form-action)
-7. [New Page](#new-page)
-8. [Insert Form](#insert-form)
-9. [Fill Form](#fill-form)
-10. [Buckaroo Payment](#buckaroo-payment)
-11. [Buckaroo Payment Status](#buckaroo-payment-status)
+6. [Nieuwe iDEAL formulier actie toevoegen](#nieuwe-ideal-formulier-actie-toevoegen)
+7. [Nieuwe pagina aanmaken voor formulier](#nieuwe-pagina-aanmaken-voor-formulier)
+8. [Formulier invoegen in pagina](#formulier-invoegen-in-pagina)
+9. [Formulier testen](#formulier-testen)
+10. [Buckaroo betaling](#buckaroo-betaling)
+11. [Buckaroo betalingsstatus](#buckaroo-betalingsstatus)
 
 ## Inloggen in WordPress admin omgeving
 
@@ -26,30 +26,38 @@ Zodra je bent ingelogd moet er een nieuwe betalingsgateway configuratie toegevoe
 
 ## Nieuw Formidable Forms formulier toevoegen
 
-Vervolgens voegen we een nieuw Formidable Forms formulier toe waarmee de bezoekers een betaling kunnen verrichten.
+Vervolgens voegen we een nieuw Formidable Forms formulier toe waarmee de bezoekers een betaling kunnen verrichten. We voegen een "Tekstregel" veld toe zodat bezoekers zelf een te betalen bedrag kunnen opgeven.
 
 ![New Form](03-new-form.png)
 
-## New Form Action
+## Nieuwe iDEAL formulier actie toevoegen
+
+Na het opslaan van het Formidable Forms formulier kan het formulier uitgebreid worden met een iDEAL formulier actie. Dit zorgt er voor dat bezoekers na het insturen van het formulier doorgestuurd worden naar de iDEAL payment provider.
 
 ![New Form Action](04-new-form-action.png)
 
-## New Page
+## Nieuwe pagina aanmaken voor formulier
+
+Zodra het formulier is opgeslagen moet er een nieuwe pagina aangemaakt worden waarop het formulier gepubliceerd kan worden. Bij het toevoegen/bewerken van een pagina kan er via de "**Formulieren**" knop naast de "Media toevoegen" knop een formulier ingevoegd worden.
 
 ![New Page](05-new-page.png)
 
-## Insert Form
+## Formulier invoegen in pagina
 
 ![Insert Form](06-insert-form.png)
 
-## Fill Form
+## Formulier testen
 
 ![Fill Form](09-view-form.png)
 
-## Buckaroo Payment
+## Buckaroo betaling
+
+Na het invullen en insturen van het formulier zal de bezoeker doorgestuurd worden naar de Buckaroo betaalomgeving. Hier kan de bezoeker de gewenste betaalmethode en/of zijn/haar bank kiezen.
 
 ![Buckaroo Payment](10-buckaroo-payment.png)
 
-## Buckaroo Payment Status
+## Buckaroo betalingsstatus
+
+In de Buckaroo test modus kan de betalingsstatus eenvoudig gesimuleerd worden. Via een keuzelijst kan de gewenste betalingsstatus opgegeven worden.
 
 ![Buckaroo Payment Status](11-buckaroo-payment-status.png)

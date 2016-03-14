@@ -1,6 +1,6 @@
 # Pronamic iDEAL, Formidable Forms and Buckaroo
 
-1.	[WordPress Login]
+1.	[WordPress Login](#wordpress-login)
 2.	[New Gateway]
 3.	[New Form]
 4.	[New Form Action]

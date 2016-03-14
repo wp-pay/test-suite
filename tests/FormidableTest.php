@@ -50,19 +50,53 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
 		$this->wait_for_user_input();
 	}
 
-	public function take_screenshot( $name ) {
+	public function take_screenshot( $name, $by = null ) {
 		$file = $this->screenshots_dir . sprintf( '%1$02d', $this->screenshots_i++ ) . '-' . $name . '.png';
 
-		$this->takeScreenshot( $file );
+		$this->webDriver->takeScreenshot( $file );
+
+		if ( isset( $by ) ) {
+			$elements = $this->webDriver->findElements( $by );
+
+			$img1 = imagecreatefrompng( $file );
+
+			foreach ( $elements as $element ) {
+				$width  = $element->getSize()->getWidth();
+				$height = $element->getSize()->getHeight();
+
+				$x = $element->getLocation()->getX();
+				$y = $element->getLocation()->getY();
+
+				// @see http://stackoverflow.com/questions/20114956/php-gd-blur-part-of-an-image
+				// @see https://github.com/facebook/php-webdriver/wiki/Taking-Full-Screenshot-and-of-an-Element
+				// @see http://image.intervention.io/api/blur
+
+				$img2 = imagecreatetruecolor( $width, $height );
+				
+				imagecopy( $img2, $img1, 0, 0, $x, $y, $width, $height ); 
+
+				foreach ( range( 1, 16 ) as $i ) {
+					imagefilter( $img2, IMG_FILTER_GAUSSIAN_BLUR );
+				}
+
+				imagecopymerge( $img1, $img2, $x, $y, 0, 0, $width, $height, 100 ); // merge img2 in img1
+
+				imagedestroy( $img2 );
+			}
+
+			imagepng( $img1, $file );
+
+			imagedestroy( $img1 );
+		}
 	}
 
 	public function new_page() {
 		$this->webDriver->get( 'http://localhost:8080/wp-admin/post-new.php?post_type=page' );
 
-		$this->take_screenshot( 'new-page' );
-
 		// Title
 		$this->webDriver->findElement( WebDriverBy::id( 'title' ) )->sendKeys( 'Test' );
+
+		$this->take_screenshot( 'new-page' );
 
 		// Insert Form
 		$this->webDriver->findElement( WebDriverBy::cssSelector( 'a.frm_insert_form' ) )->click();
@@ -74,16 +108,55 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
 		$select = new WebDriverSelect( $form_field );
 		$select->selectByValue( $this->form_id );
 
+		$this->take_screenshot( 'insert-form' );
+
 		$this->webDriver->findElement( WebDriverBy::id( 'frm_insert_shortcode' ) )->click();
 
 		$this->webDriver->wait( 5, 200 )->until( WebDriverExpectedCondition::not( WebDriverExpectedCondition::visibilityOfElementLocated( WebDriverBy::id( 'frm_insert_shortcode' ) ) ) );
 
-		// Publish
+		// Publish Page
 		$by = WebDriverBy::id( 'publish' );
 
 		$this->webDriver->wait( 5, 200 )->until( WebDriverExpectedCondition::elementToBeClickable( $by ) );
 
 		$this->webDriver->findElement( $by )->click();
+
+		$this->take_screenshot( 'page-published' );
+
+		// View Page
+		$by = WebDriverBy::cssSelector( '#message.updated a' );
+
+		$this->webDriver->wait( 5, 200 )->until( WebDriverExpectedCondition::elementToBeClickable( $by ) );
+
+		$this->webDriver->findElement( $by )->click();
+
+		$this->take_screenshot( 'view-page' );
+
+		// Enter amount
+		$this->webDriver->findElement( WebDriverBy::cssSelector( sprintf( 'input[name="item_meta[%s]"]', $this->field_id ) ) )->sendKeys( '123' );
+
+		$this->take_screenshot( 'view-form' );
+
+		$this->webDriver->findElement( WebDriverBy::cssSelector( '.frm_submit input' ) )->click();
+
+		// Select iDEAL issuer
+		$this->take_screenshot( 'buckaroo-payment' );
+
+		$select = new WebDriverSelect( $this->webDriver->findElement( WebDriverBy::id( 'brq_SERVICE_ideal_issuer' ) ) );
+		$select->selectByValue( 'RABONL2U' );
+
+		$this->webDriver->findElement( WebDriverBy::id( 'button_continue' ) )->click();
+
+		// Payment Status
+		$this->take_screenshot( 'buckaroo-payment-status' );
+
+		$this->webDriver->findElement( WebDriverBy::cssSelector( 'input[type="submit"]' ) )->click();
+
+		// Alert Accept
+		// @see https://github.com/facebook/php-webdriver/wiki/Alert,-Window-Tab,-frame-iframe-and-active-element
+		$this->webDriver->switchTo()->alert()->accept();;
+
+		$this->take_screenshot( 'end' );
 	}
 
 	public function new_formidable_form() {
@@ -101,6 +174,21 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
 		$this->wait_for_jquery_ajax();
 
 		$this->field_id = $this->webDriver->findElement( WebDriverBy::cssSelector( '#new_fields .form-field:last-child' ) )->getAttribute( 'data-fid' );
+
+		// $this->wait_for_user_input();
+
+		// Adjust field title
+		// $element = $this->webDriver->findElement( WebDriverBy::id( sprintf( 'field_label_%s', $this->field_id ) ) );
+
+		// Element is made editable on mouseenter
+		// @see https://github.com/wp-premium/formidable/blob/2.0.22/js/formidable_admin.js#L842-L848
+		// $this->webDriver->getMouse()->mouseMove( $element->getCoordinates() );
+
+		// $element->clear()->sendKeys( 'Bedrag' );
+
+		// $this->wait_for_user_input();
+
+		$this->take_screenshot( 'new-form' );
 
 		// Submit Button
 		$this->webDriver->findElement( WebDriverBy::id( 'frm_submit_side_top' ) )->click();
@@ -120,6 +208,8 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
 		$select = new WebDriverSelect( $amount_field );
 		$select->selectByValue( $this->field_id );
 
+		$this->take_screenshot( 'new-form-action' );
+
 		// Submit Button
 		$this->webDriver->findElement( WebDriverBy::id( 'frm_submit_side_top' ) )->click();
 	}
@@ -133,7 +223,7 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
 		$user_pass = $this->webDriver->findElement( WebDriverBy::id( 'user_pass' ) );
 		$user_pass->sendKeys( 'test' );
 
-		$this->webDriver->takeScreenshot( __DIR__ . '/../screenshots/screenshot2.png' );
+		$this->take_screenshot( 'login' );
 
 		$submit = $this->webDriver->findElement( WebDriverBy::id( 'wp-submit' ) );
 		$submit->click();
@@ -192,6 +282,8 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
 
 		$key_field = $this->webDriver->findElement( WebDriverBy::id( '_pronamic_gateway_buckaroo_secret_key' ) );
 		$key_field->sendKeys( getenv( 'BUCKAROO_SECRET_KEY' ) );
+
+		$this->take_screenshot( 'new-gateway', WebDriverBy::cssSelector( '#_pronamic_gateway_buckaroo_website_key, #_pronamic_gateway_buckaroo_secret_key' ) );
 
 		// Publish
 		$this->wait_for_jquery_ajax();

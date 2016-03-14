@@ -1,24 +1,32 @@
-# Pronamic iDEAL, Formidable Forms and Buckaroo
+# Pronamic iDEAL, Formidable Forms en Buckaroo
 
-1.	[WordPress Login](#wordpress-login)
-2.	[New Gateway](#new-gateway)
-3.	[New Form](#new-form)
-4.	[New Form Action](#new-form-action)
-5.	[New Page](#new-page)
-6.	[Insert Form](#insert-form)
-7.	[Fill Form](#fill-form)
-8.	[Buckaroo Payment](#buckaroo-payment)
-9.	[Buckaroo Payment Status](#buckaroo-payment-status)
+1. Installeer de Pronamic iDEAL plugin
+2. Installeer de Formidable Forms plugin
+3. [Inloggen in WordPress admin omgeving](#inloggen-in-wordpress-admin-omgeving)
+4. [Nieuwe betalingsgateway gateway toevoegen](#nieuwe-betalingsgateway-gateway-toevoegen)
+5. [Nieuw Formidable Forms formulier toevoegen](#nieuw-formidable-forms-formulier-toevoegen)
+6. [New Form Action](#new-form-action)
+7. [New Page](#new-page)
+8. [Insert Form](#insert-form)
+9. [Fill Form](#fill-form)
+10. [Buckaroo Payment](#buckaroo-payment)
+11. [Buckaroo Payment Status](#buckaroo-payment-status)
 
-## WordPress Login
+## Inloggen in WordPress admin omgeving
+
+Om de Pronamic iDEAL plugin te configueren voor Formidable Forms en Buckaroo zal er eerst ingelogd moeten worden in de WordPress admin omgeving. 
 
 ![WordPress Login](01-login.png)
 
-## New Gateway
+## Nieuwe betalingsgateway configuratie toevoegen
+
+Zodra je bent ingelogd moet er een nieuwe betalingsgateway configuratie toegevoegd worden. Dit kan via "**iDEAL** » **Configuraties** » **Nieuwe toevoegen**".
 
 ![New Gateway](02-new-gateway.png)
 
-## New Form
+## Nieuw Formidable Forms formulier toevoegen
+
+Vervolgens voegen we een nieuw Formidable Forms formulier toe waarmee de bezoekers een betaling kunnen verrichten.
 
 ![New Form](03-new-form.png)
 

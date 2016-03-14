@@ -1,5 +1,15 @@
 # Pronamic iDEAL, Formidable Forms and Buckaroo
 
+1.	[WordPress Login]
+2.	[New Gateway]
+3.	[New Form]
+4.	[New Form Action]
+5.	[New Page]
+6.	[Insert Form]
+7.	[Fill Form]
+8.	[Buckaroo Payment]
+9.	[Buckaroo Payment Status]
+
 ## WordPress Login
 
 ![WordPress Login](01-login.png)

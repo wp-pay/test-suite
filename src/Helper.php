@@ -40,6 +40,25 @@ class Pronamic_WP_Pay_TestSuite_Helper {
 		$this->cli->passthru( 'wp option update pronamic_pay_license_status valid' );
 
 		$this->cli->passthru( 'wp user meta update test pronamic_pay_ignore_tour 1' );
+
+		// Pages
+		$parent_id = $this->cli->shell_exec( 'wp post create --post_type=page --post_title="iDEAL" --post_status=publish --porcelain' );
+
+		$pages = array(
+			'error'     => 'iDEAL-betalingsfout',
+			'cancel'    =>'iDEAL-betaling geannuleerd',
+			'unknown'   => 'iDEAL-betaling onbekend',
+			'expired'   => 'iDEAL-betaling verlopen',
+			'completed' => 'iDEAL-betaling voltooid',
+		);
+
+		foreach ( $pages as $key => $title ) {
+			$page_id = $this->cli->shell_exec( sprintf( 'wp post create --post_type=page --post_title="%s" --post_status=publish --post_parent=%d --porcelain', $title, $parent_id ) );
+
+			$option = sprintf( 'pronamic_pay_%s_page_id', $key );
+
+			$this->cli->passthru( sprintf( 'wp option update %s %d', $option, $page_id ) );
+		}
 	}
 
 	public function start_services() {

@@ -14,21 +14,23 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
 		global $cli;
 		global $config;
 
-		$helper->install_pronamic_ideal();
+		// Versions
+		$this->version_pronamic_ideal = 'develop';
+		$this->version_formidable     = '2.0.22';
 
-		// Version
-		$this->version = '2.0.22';
+		// Pronamic iDEAL
+		$helper->install_pronamic_ideal( $this->version_pronamic_ideal );
 
 		// Screenshots
-		$this->screenshots_dir = $config->get_screenshots_dir() . sprintf( '/formidable/%s/', $this->version );
+		$this->screenshots_dir = $config->get_screenshots_dir() . sprintf( '/%s/formidable/%s/buckaroo/', $this->version_pronamic_ideal, $this->version_formidable );
 		$this->screenshots_i   = 1;
 
 		if ( ! is_dir( $this->screenshots_dir ) ) {
 			mkdir( $this->screenshots_dir, 0777, true );
 		}
 
-		// Gravity Forms
-		$cli->passthru( sprintf( 'wp plugin install formidable --activate --version=%s', $this->version ) );
+		// Formidable
+		$cli->passthru( sprintf( 'wp plugin install formidable --activate --version=%s', $this->version_formidable ) );
 
 		// User
 		// @see https://github.com/wp-premium/formidable/blob/2.0.22/classes/controllers/FrmAppController.php#L210-L217

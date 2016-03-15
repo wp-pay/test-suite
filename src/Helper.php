@@ -28,8 +28,12 @@ class Pronamic_WP_Pay_TestSuite_Helper {
 		$this->cli->passthru( sprintf( 'wp core language activate %s', $this->config->get_locale() ) );
 	}
 
-	public function install_pronamic_ideal() {
-		$this->cli->passthru( 'wp plugin install pronamic-ideal' );
+	public function install_pronamic_ideal( $version ) {
+		if ( 'develop' === $version ) {
+			$this->cli->passthru( sprintf( 'ln -s ~/Workspace/wp-pronamic-ideal  %s/wp-content/plugins/pronamic-ideal', $this->config->get_dir() ) );
+		} else {
+			$this->cli->passthru( sprintf( 'wp plugin install pronamic-ideal --version=%s', $version ) );
+		}
 
 		$this->cli->passthru( 'wp plugin activate pronamic-ideal' );
 

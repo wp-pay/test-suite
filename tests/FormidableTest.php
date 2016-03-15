@@ -147,6 +147,12 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
 		$select = new WebDriverSelect( $this->webDriver->findElement( WebDriverBy::id( 'brq_SERVICE_ideal_issuer' ) ) );
 		$select->selectByValue( 'RABONL2U' );
 
+		// Check description
+		$description = $this->webDriver->findElement( WebDriverBy::cssSelector( 'tr.bpe_payment_description td' ) )->getText();
+		
+		$this->assertStringMatchesFormat( 'Test %d', $description );
+
+		// Continue
 		$this->webDriver->findElement( WebDriverBy::id( 'button_continue' ) )->click();
 
 		// Payment Status
@@ -205,10 +211,15 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
 
 		$this->wait_for_jquery_ajax();
 
-		$amount_field = $this->webDriver->findElement( WebDriverBy::cssSelector( '.frm_single_pronamic_pay_settings select[name*="pronamic_pay_amount_field"]' ) );
+		// Amount field
+		$element = $this->webDriver->findElement( WebDriverBy::cssSelector( '.frm_single_pronamic_pay_settings select[name*="pronamic_pay_amount_field"]' ) );
 
-		$select = new WebDriverSelect( $amount_field );
+		$select = new WebDriverSelect( $element );
 		$select->selectByValue( $this->field_id );
+
+		// Transaction description field
+		$element = $this->webDriver->findElement( WebDriverBy::cssSelector( '.frm_single_pronamic_pay_settings input[name*="pronamic_pay_transaction_description"]' ) );
+		$element->sendKeys( 'Test [id]' );
 
 		$this->take_screenshot( 'new-form-action' );
 

@@ -23,6 +23,7 @@ which avconv
 `vendor/bin/phpunit tests/GravityFormsTest.php --verbose --debug`
 `vendor/bin/phpunit tests/WordPressTest.php --verbose --debug`
 `vendor/bin/phpunit tests/WooCommerceTest.php --verbose --debug`
+`vendor/bin/phpunit tests/WPeCommerceTest.php --verbose --debug`
 
 ## Test
 

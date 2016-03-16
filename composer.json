@@ -3,7 +3,6 @@
         "classmap": ["src/"]
     },
     "require": {
-        "wp-cli/wp-cli": "^0.21.1",
         "phpunit/phpunit": "^5.1",
         "phpunit/phpunit-selenium": "^2.0",
         "symfony/process": "^3.0"

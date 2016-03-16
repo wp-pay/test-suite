@@ -38,8 +38,11 @@ class Pronamic_WP_Pay_TestSuite_Helper {
 		$this->cli->passthru( 'wp plugin activate pronamic-ideal' );
 
 		$this->cli->passthru( 'wp option update pronamic_pay_license_status valid' );
+		$this->cli->passthru( sprintf( 'wp option update pronamic_pay_version %s', $version ) );
 
 		$this->cli->passthru( 'wp user meta update test pronamic_pay_ignore_tour 1' );
+
+		$this->cli->passthru( 'wp transient delete pronamic_pay_admin_redirect' );
 
 		// Pages
 		$parent_id = $this->cli->shell_exec( 'wp post create --post_type=page --post_title="iDEAL" --post_status=publish --porcelain' );
@@ -66,7 +69,7 @@ class Pronamic_WP_Pay_TestSuite_Helper {
 
 		$this->start_selenium();
 
-		$this->start_php_server();
+		//$this->start_wp_server();
 	}
 
 	public function start_xvfb() {
@@ -103,9 +106,9 @@ class Pronamic_WP_Pay_TestSuite_Helper {
 		$this->cli->passthru( 'wget --retry-connrefused --tries=10 --waitretry=1 http://127.0.0.1:4444/wd/hub/status -O /dev/null' );
 	}
 
-	public function start_php_server() {
+	public function start_wp_server() {
 		// $test->process( 'wp server', 'logs/wp-server.log', 'pids/%s-wp-server.pid' );
 		// http://php.net/manual/en/features.commandline.webserver.php
-		$this->php_server = new Pronamic_WP_Pay_TestSuite_Service( $this->cli, 'php -S localhost:8080 -c php.ini -t wordpress vendor/wp-cli/wp-cli/php/router.php', 'logs/php-server.log' );
+		$this->php_server = new Pronamic_WP_Pay_TestSuite_Service( $this->cli, 'wp server', 'logs/wp-server.log' );
 	}
 }

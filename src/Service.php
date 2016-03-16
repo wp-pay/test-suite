@@ -5,6 +5,7 @@ class Pronamic_WP_Pay_TestSuite_Service {
 		$this->cli         = $cli;
 		$this->command     = $command;
 		$this->stdout_file = $stdout_file;
+		$this->stdout_file = '/dev/null';
 
 		$this->start();
 	}

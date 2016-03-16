@@ -1,5 +1,5 @@
 path: wordpress
-url: http://localhost:8080
+url: http://test.dev/
 user: test
 
 core config:
@@ -10,6 +10,7 @@ core config:
     define( 'AUTOSAVE_INTERVAL', 60*60*60*24*365 );
     define( 'EMPTY_TRASH_DAYS',  0 );
     define( 'WP_POST_REVISIONS', false );
+    $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'];
 
 core install:
   title: Test

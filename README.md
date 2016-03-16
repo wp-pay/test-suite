@@ -19,7 +19,9 @@ which avconv
 
 ## CLI
 
+`ln -s ~/Workspace/test-suite/ ~/Websites/test.dev/
 `vendor/bin/phpunit tests/FormidableTest.php --verbose --debug`
+`vendor/bin/phpunit tests/GiveTest.php --verbose --debug`
 `vendor/bin/phpunit tests/GravityFormsTest.php --verbose --debug`
 `vendor/bin/phpunit tests/WordPressTest.php --verbose --debug`
 `vendor/bin/phpunit tests/WooCommerceTest.php --verbose --debug`

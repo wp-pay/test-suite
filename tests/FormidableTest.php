@@ -141,28 +141,7 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
 
 		$this->webDriver->findElement( WebDriverBy::cssSelector( '.frm_submit input' ) )->click();
 
-		// Select iDEAL issuer
-		$this->take_screenshot( 'buckaroo-payment' );
-
-		$select = new WebDriverSelect( $this->webDriver->findElement( WebDriverBy::id( 'brq_SERVICE_ideal_issuer' ) ) );
-		$select->selectByValue( 'RABONL2U' );
-
-		// Check description
-		$description = $this->webDriver->findElement( WebDriverBy::cssSelector( 'tr.bpe_payment_description td' ) )->getText();
-		
-		$this->assertStringMatchesFormat( 'Test %d', $description );
-
-		// Continue
-		$this->webDriver->findElement( WebDriverBy::id( 'button_continue' ) )->click();
-
-		// Payment Status
-		$this->take_screenshot( 'buckaroo-payment-status' );
-
-		$this->webDriver->findElement( WebDriverBy::cssSelector( 'input[type="submit"]' ) )->click();
-
-		// Alert Accept
-		// @see https://github.com/facebook/php-webdriver/wiki/Alert,-Window-Tab,-frame-iframe-and-active-element
-		$this->webDriver->switchTo()->alert()->accept();;
+		$this->handle_buckaroo();
 
 		$this->take_screenshot( 'end' );
 	}
@@ -271,41 +250,4 @@ class Pronamic_WP_Pay_TestSuite_FormidableTest extends Pronamic_WP_Pay_TestSuite
             return $this->webDriver->executeScript( $condition );
         } );
     }
-
-	public function new_buckaroo_gateway() {
-		// New gateway
-		$this->webDriver->get( 'http://localhost:8080/wp-admin/post-new.php?post_type=pronamic_gateway' );
-
-		// Post ID
-		$this->gateway_id = $this->webDriver->findElement( WebDriverBy::id( 'post_ID' ) )->getAttribute( 'value' );
-
-		// Title
-		$title_field = $this->webDriver->findElement( WebDriverBy::id( 'title' ) );
-		$title_field->sendKeys( 'Buckaroo' );
-
-		// Gateway
-		$gateway_field = $this->webDriver->findElement( WebDriverBy::id( 'pronamic_gateway_id' ) );
-
-		$select = new WebDriverSelect( $gateway_field );
-		$select->selectByValue( 'buckaroo' );
-
-		// Buckaroo
-		$key_field = $this->webDriver->findElement( WebDriverBy::id( '_pronamic_gateway_buckaroo_website_key' ) );
-		$key_field->sendKeys( getenv( 'BUCKAROO_WEBSITE_KEY' ) );
-
-		$key_field = $this->webDriver->findElement( WebDriverBy::id( '_pronamic_gateway_buckaroo_secret_key' ) );
-		$key_field->sendKeys( getenv( 'BUCKAROO_SECRET_KEY' ) );
-
-		$this->take_screenshot( 'new-gateway', WebDriverBy::cssSelector( '#_pronamic_gateway_buckaroo_website_key, #_pronamic_gateway_buckaroo_secret_key' ) );
-
-		// Publish
-		$this->wait_for_jquery_ajax();
-
-		$by = WebDriverBy::id( 'publish' );
-
-		$this->webDriver->wait( 5, 200 )->until( WebDriverExpectedCondition::elementToBeClickable( $by ) );
-
-		$publish_button = $this->webDriver->findElement( $by );
-		$publish_button->click();
-	}
 }

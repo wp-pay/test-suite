@@ -2,8 +2,6 @@
 
 ![WordPress Login](01-login.png)
 
-![New Gateway](02-new-gateway.png)
-
 ![Plugin Install](02-plugin-install.png)
 
 ![Plugin Activate](03-plugin-activate.png)

@@ -75,6 +75,8 @@ class Pronamic_WP_Pay_TestSuite_GiveTest extends Pronamic_WP_Pay_TestSuite_TestC
 
 	public function give_gateway_settings() {
 		$this->webDriver->get( 'http://test.dev/wp-admin/edit.php?post_type=give_forms&page=give-settings&tab=gateways' );
+
+		$this->take_screenshot( 'give-gateway-settings' );
 		
 		$this->webDriver->findElement( WebDriverBy::id( 'test_mode' ) )->click();
 
@@ -82,8 +84,6 @@ class Pronamic_WP_Pay_TestSuite_GiveTest extends Pronamic_WP_Pay_TestSuite_TestC
 
 		$select = new WebDriverSelect( $this->webDriver->findElement( WebDriverBy::id( 'give_pronamic_pay_ideal_configuration' ) ) );
 		$select->selectByValue( $this->gateway_id );
-
-		$this->take_screenshot( 'give-gateway-settings' );
 
 		$this->webDriver->findElement( WebDriverBy::cssSelector( '.wrap .button-primary' ) )->click();
 	}

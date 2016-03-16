@@ -82,8 +82,11 @@ class Pronamic_WP_Pay_TestSuite_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	protected function setUp() {
 		global $helper;
+		global $cli;
 
 		$helper->install_wp();
+
+		$cli->passthru( 'wp user meta update test show_admin_bar_front 0' );
 
 		// @see https://github.com/facebook/php-webdriver/wiki/Example-command-reference
 		// $this->webDriver->manage()->window()->maximize();

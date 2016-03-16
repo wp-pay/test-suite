@@ -30,6 +30,10 @@ class Pronamic_WP_Pay_TestSuite_GiveTest extends Pronamic_WP_Pay_TestSuite_TestC
 			mkdir( $this->screenshots_dir, 0777, true );
 		}
 
+		// Theme
+		$cli->passthru( 'wp theme install twentytwelve' );
+		$cli->passthru( 'wp theme activate twentytwelve' );
+
 		// Give
 		// $cli->passthru( sprintf( 'wp plugin install give --activate --version=%s', $this->version_give ) );
 

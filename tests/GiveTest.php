@@ -124,7 +124,7 @@ class Pronamic_WP_Pay_TestSuite_GiveTest extends Pronamic_WP_Pay_TestSuite_TestC
 
 		$this->webDriver->findElement( WebDriverBy::id( 'give-purchase-button' ) )->click();
 
-		$this->handle_buckaroo( 'Give donation %d' );
+		$this->handle_buckaroo( 'Give donatie %d' );
 
 		$this->take_screenshot( 'end' );
 	}

@@ -86,6 +86,12 @@ wp post meta update $POST_ID '_pronamic_gateway_omnikassa_merchant_id' '00202000
 wp post meta update $POST_ID '_pronamic_gateway_omnikassa_secret_key' '002020000000001_KEY1'
 wp post meta update $POST_ID '_pronamic_gateway_omnikassa_key_version' '1'
 
+POST_ID=`wp post create --post_type=pronamic_gateway --post_title='Pay.nl - Test' --post_status=publish --porcelain`
+wp post meta update $POST_ID '_pronamic_gateway_id' 'pay_nl'
+wp post meta update $POST_ID '_pronamic_gateway_mode' 'test'
+wp post meta update $POST_ID '_pronamic_gateway_pay_nl_token' $PAY_NL_TOKEN
+wp post meta update $POST_ID '_pronamic_gateway_pay_nl_service_id' $PAY_NL_SERVICE_ID
+
 POST_ID=`wp post create --post_type=pronamic_gateway --post_title='Qantani - Test' --post_status=publish --porcelain`
 wp post meta update $POST_ID '_pronamic_gateway_id' 'qantani'
 wp post meta update $POST_ID '_pronamic_gateway_mode' 'test'
